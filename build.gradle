@@ -1,0 +1,41 @@
+
+plugins {
+	id "com.moowork.node" version "1.2.0"
+}
+
+node {
+	download = true
+}
+
+task build {
+	doLast {
+		
+	}
+}
+
+/* This task zip has a type of ZIp and the 'from' definition tells gradle to look into the current directory
+ * the include "*" means to include all files in the current directory that isn't a folder
+ * the include "bin/**" means to include all everything in the bin folder
+ * This is a way to pick and choose what files to zip using the zip task
+*/
+task zip(type: Zip) {
+	from ('.') {
+		include "*"
+        	include "bin/**"
+        	include "data/**"
+        	include "node_modules/**"
+        	include "public/**"
+        	include "routes/**"
+        	include "views/**"
+    	}
+    	destinationDir(file("dist"))
+    	baseName "trainSchedule"
+}
+
+build.dependsOn zip
+zip.dependsOn npm_build
+build.dependsOn npm_build
+npm_build.dependsOn npmInstall
+npm_build.dependsOn npm_test
+npm_test.dependsOn npmInstall
+
